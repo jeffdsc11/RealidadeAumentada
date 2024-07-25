@@ -35,7 +35,6 @@
 
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
     <a-camera gps-new-camera rotation-reader></a-camera>
-    <!-- Placeholder for the cube -->
     <a-box id="interactive-cube" material="color: blue;" scale="1 1 1" visible="false"></a-box>
   </a-scene>
 
@@ -52,7 +51,13 @@
       });
 
       // Event listener for touch or mouse click to place the cube
-      document.addEventListener('click', function (event) {
+      document.addEventListener('touchend', placeCube);
+      document.addEventListener('click', placeCube);
+
+      function placeCube(event) {
+        // Prevent the default behavior
+        event.preventDefault();
+
         // Get the touch/click position
         const touch = event.changedTouches ? event.changedTouches[0] : event;
         const x = (touch.clientX / window.innerWidth) * 2 - 1;
@@ -73,7 +78,7 @@
           cube.setAttribute('material', 'color', selectedColor);
           cube.setAttribute('visible', 'true');
         }
-      });
+      }
     });
   </script>
 </body>
