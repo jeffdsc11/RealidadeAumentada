@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AR.js A-Frame Location-based</title>
+<title>AR.js A-Frame Location-based AR</title>
 <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-<script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-threex-location-only.js'></script>
-<script type='text/javascript' src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js'></script>
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.7/aframe/build/aframe-ar.js"></script>
 </head>
-<body>
-<a-scene vr-mode-ui='enabled: false' arjs='sourceType: webcam; videoTexture: true; debugUIEnabled: false' renderer='antialias: true; alpha: true'>
-    <a-camera gps-new-camera='gpsMinDistance: 5'></a-camera>
-    <a-entity material='color: red' geometry='primitive: box' gps-new-entity-place="latitude:-8.7731261061674836; longitude: -63.830288920378" scale="1 1 1"></a-entity>
+<body style="margin: 0; overflow: hidden;">
+<a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+    <a-camera gps-new-camera rotation-reader></a-camera>
+    <a-box position="0 0 0" material="color: blue;" scale="1 1 1" gps-new-entity-place="latitude: 0; longitude: 0;"></a-box>
 </a-scene>
 
-<div id="coords" style="position: absolute; top: 10px; left: 10px; background: white; padding: 10px; border: 1px solid black;">
-    Coordenadas: Carregando...
-</div>
-
 <script>
-if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        var coordsDiv = document.getElementById('coords');
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        coordsDiv.innerHTML = "Coordenadas: Latitude " + latitude + ", Longitude " + longitude;
-    }, function(error) {
-        console.error("Erro ao obter localização:", error);
-        document.getElementById('coords').innerHTML = "Erro ao obter localização.";
-    });
-} else {
-    document.getElementById('coords').innerHTML = "Geolocalização não é suportada neste navegador.";
-}
-</script>
+document.addEventListener('DOMContentLoaded', function () {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
 
+            // Set the initial position of the cube
+            const box = document.querySelector('a-box');
+            box.setAttribute('gps-new-entity-place', `latitude: ${latitude}; longitude: ${longitude}`);
+        }, function (error) {
+            console.error("Erro ao obter localização:", error);
+        });
+    } else {
+        console.log("Geolocalização não é suportada neste navegador.");
+    }
+});
+</script>
 </body>
 </html>
